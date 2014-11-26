@@ -1,0 +1,112 @@
+<div id="gridbox"></div>
+<?php if (isset($grid->scheme)) : ?>
+<div style="display:none">
+    <?php foreach ($grid->get('scheme') as $col) : ?>
+    <?php if (isset($col->filter) && $col->get('entity') == 'field') : ?>
+        <?php if ($col->get('filter')->get('name') == 'input') : ?>
+        <div id="<?php echo $col->get('name') ?>_flt_box"><input style="border:1px solid gray; width:100%" onclick="(arguments[0]||window.event).cancelBubble=true;" onkeyup="filterBy()"></div>
+        <?php elseif ($col->get('filter')->get('name') == 'select' && $col->get('filter')->options) : ?>
+        <div id="<?php echo $col->get('name') ?>_flt_box">
+            <select class="chosen-select" style="border:1px solid gray; width:100%" onclick="(arguments[0]||window.event).cancelBubble=true;" onchange="filterBy()">
+                <?php foreach ($col->get('filter')->options as $value => $name) : ?>
+                <option value="<?php echo $value; ?>"><?php echo $name;?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <?php endif; ?>
+    <?php endif; ?>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+
+<script>   
+    dhtmlx.CustomScroll.init();
+	gridSortOrder='desc';
+	gridSortOrderBy=1;
+	onpage = 20;
+	var getListLink = <?php echo json_encode($this->url('admin', array('action' => 'list'), true));?>+"?action=list";
+	function doOnLoad(){
+		mygrid = new dhtmlXGridObject('gridbox');
+        <?php if (isset($setting->imgsPath)) : ?>
+		mygrid.setImagePath("<?php echo $this->basePath($setting->get('imgsPath'))?>");
+        <?php endif; ?>
+        <?php if (isset($grid->header)) : ?>
+        mygrid.setHeader("#,<?php echo implode(',', $grid->get('header')->toArray()) ?>");
+        <?php endif; ?>
+        <?php if (isset($grid->width)) : ?>    
+		mygrid.setInitWidths("15,<?php echo implode(',', $grid->get('width')->toArray()) ?>");
+        <?php endif; ?> 
+        <?php if (isset($grid->align)) : ?> 
+		mygrid.setColAlign("center,<?php echo implode(',', $grid->get('align')->toArray()) ?>");
+        <?php endif; ?>
+        <?php if (isset($grid->type)) : ?> 
+		mygrid.setColTypes("ro,<?php echo implode(',', $grid->get('type')->toArray()) ?>");
+        <?php endif; ?>
+        <?php if (isset($grid->sort)) : ?> 
+		mygrid.setColSorting("na,<?php echo implode(',', $grid->get('sort')->toArray()) ?>");
+        mygrid.attachEvent("onBeforeSorting",function(ind,type,dir){
+            gridSortOrderBy=ind;
+            gridSortOrder=dir;
+            filterBy();
+            return false;
+          });
+        <?php endif; ?>
+		mygrid.init();
+        <?php if (isset($setting->skin)) : ?>
+		mygrid.setSkin("<?php echo $setting->get('skin'); ?>");
+        <?php endif; ?>
+		mygrid.enableSmartRendering(true,onpage);
+		mygrid.setAwaitedRowHeight(28);
+        
+        mygrid.attachEvent("onBeforeSelect", function(id,ind){
+	  	var rowNum = mygrid.cellById(id,0).getValue();
+	  	return common.selectItemInList(id, rowNum, <?php echo json_encode($this->url('admin', array('action' => 'edit'), true));?>);
+	  });
+        <?php 
+        $attachHeader  = '';
+        $count = $grid->get('scheme')->count();
+        $currentField = 0;
+        foreach ($grid->get('scheme') as $col) {
+            $currentField++;
+            if (isset($col->filter) && $col->get('entity') == 'field') {
+                $attachHeader .= "<div id='{$col->get('name')}_flt'><\/div>";
+            }
+            if ($currentField < $count) {
+                $attachHeader .= ',';
+            }
+        } ?>
+        mygrid.attachHeader("#rspan,<?php echo $attachHeader; ?>");
+        //set filters fields
+        <?php foreach ($grid->get('scheme') as $col) : ?>
+            <?php if (isset($col->filter) && $col->get('entity') == 'field') : ?>
+                    $('#<?php echo $col->get('name') ?>_flt').append($("#<?php echo $col->get('name') ?>_flt_box"));
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+
+        mygrid.setSizes();
+        filterBy();
+	}
+	function filterBy(){
+        <?php
+        $paramQuery = '';
+        foreach ($grid->get('scheme') as $col) {
+            if (isset($col->filter) && $col->get('entity') == 'field') { 
+        ?> 
+            var <?php echo $col->get('name'); ?>Val = encodeURIComponent($('#<?php echo $col->get('name'); ?>_flt').find('<?php echo $col->get('filter')->get('name') ?>').val());   
+            <?php    
+            $paramQuery .= "+'&fl{$col->get('name')}='+{$col->get('name')}Val";
+            }
+        }
+        ?>
+		mygrid.clearAll();
+		mygrid.load(getListLink+"&order="+gridSortOrder+"&orderby="+gridSortOrderBy<?php echo $paramQuery; ?>, function() {
+			mygrid.setSortImgState(true,gridSortOrderBy,gridSortOrder);    //set a correct sorting image
+		});
+	}
+	$(document).ready(function(){ 
+			common.setGridHeight();
+			doOnLoad();
+	});
+</script>

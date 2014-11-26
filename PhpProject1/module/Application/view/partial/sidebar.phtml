@@ -1,0 +1,11 @@
+<div id="sidebar" class="col-xs-6 col-sm-3 sidebar-offcanvas panel panel-default" role="navigation">
+    <h1><?php echo _("Categories"); ?></h1>
+    <?php $categoryList = $this->getCategoryList();
+    if (!empty($categoryList)) :?>
+    <ul class="list-group">
+        <?php foreach($categoryList as $category) : ?>
+        <li class="list-group-item"><a href="<?php echo $this->url('home', array('action' => 'catalog', 'category' => $category->getId())); ?>"><?php echo $this->escapeHtml($category->getTitle()); ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+</div>

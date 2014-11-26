@@ -1,0 +1,22 @@
+<rows pos="<?php echo $pos; ?>" total_count="<?php echo $total; ?>">
+    <?php $i = $pos;
+     foreach ($list as $item) : $i++;
+?>
+        <row id="<?php echo $this->escapeHtml($item['id']); ?>">
+            <cell><?php echo $i ?></cell>
+            <?php foreach ($scheme as $entity) :?>
+            <cell>
+                <?php if ($entity->get('entity') == 'field') {
+                        echo $this->escapeHtml($item[$entity->get('name')]);
+                    } elseif ($entity->get('entity') == 'action') {
+                        if ($entity->get('type') == 'fancybox') {
+                            echo $this->escapeHtml("<a class='{$entity->get('class')}' onclick='initFancybox(\"".$this->url('admin', array('action' => $entity->get('action'), 'id' => $item['id']), true)."\"); (arguments[0]||window.event).cancelBubble=true; return false;' href='".$this->url('admin', array('action' => $entity->get('action'), 'id' => $item['id']), true)."'>".$entity->get('name')."</a> ");
+                        } elseif($entity->get('type') == 'confirm') {
+                            echo $this->escapeHtml("<a class='{$entity->get('class')}' href='#' onclick='common.confdel(\"".$this->url('admin', array('action' => $entity->get('action'), 'id' => $item['id']), true)."\",{$item['id']}, common.removeItem); (arguments[0]||window.event).cancelBubble=true; return false;'>".$entity->get('name')."</a>");
+                        }
+                    } ?>
+            </cell>
+            <?php endforeach; ?>
+        </row>
+<?php endforeach; ?>
+</rows>

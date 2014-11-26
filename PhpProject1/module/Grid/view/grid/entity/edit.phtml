@@ -1,0 +1,31 @@
+<div class="temlates">
+    <h1><?php echo $title; ?></h1>
+    <?php
+    if (isset($error) && !empty($error)) {
+        $this->headTitle('Error');
+        echo $error;
+        return;
+    }
+    ?>
+    <div class="invTabs">
+        <?php
+        $id = $this->form->get('id')->getValue();
+        $this->headTitle(htmlspecialchars($this->form->get('title')->getValue()));
+        echo $this->wrappedForm($form);
+        ?>
+    </div>
+    <script>
+        $('.locfields').parent().parent().hide();
+<?php if (isset($canClosePage) && $canClosePage) : ?>
+            parent.common.needClose++;
+<?php endif; ?>
+        parent.common.refreshGrid = 0;
+        delete parent.common.refreshDataLink;
+        parent.common.changedForm = false;
+        parent.common.refreshGrid = 1;
+<?php if ($id > 0) : ?>
+            parent.common.refreshDataLink = parent.getListLink + "&flid=" +<?php echo json_encode($id); ?>;
+<?php endif; ?>
+    </script>
+</div>
+

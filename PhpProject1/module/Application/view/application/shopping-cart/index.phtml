@@ -1,0 +1,58 @@
+<?php
+$title = _('Shopping Cart');
+$this->headTitle($title);
+$totalPrice = 0;
+?>
+<div class="header-title ipadpages">
+    <div class="h-bg">	
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+</div>
+<div class="row row-offcanvas row-offcanvas-right">
+    <div class="col-xs-12 col-sm-9">
+        <?php foreach ($this->list as $product) : 
+            $productCount = ($this->sessionProductShoppingCart) ? $this->sessionProductShoppingCart[$product->id] : $product->count;
+            $totalPrice += ($product->price * $productCount);?>
+            <div class="panel panel-default">
+                <div class="panel-heading"><a href="<?php echo $this->url('product', array('action' => 'index', 'slug' => $product->slug)); ?>"><?php echo $this->escapeHtml($product->title); ?></a></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-2">
+                            <img alt="<?php echo $this->escapeHtml($product->title); ?>" style="height: auto; width: 100%; display: block;" src="<?php echo $this->resizeImage($product->resource, 100, 100); ?>">
+                        </div>
+                        <div class="col-xs-6 col-md-8">
+                            <p><strong>Price:</strong> <?php echo $this->escapeHtml($product->price); ?><?php echo $this->escapeHtml($product->currency); ?></p>
+                            <p><strong>Count:</strong> <?php echo $this->escapeHtml($productCount); ?></p>
+                            <p><strong>Type:</strong> <?php echo $this->escapeHtml($product->type); ?></p>
+                            <p><strong>Description:</strong> <?php echo $this->escapeHtml($product->description); ?></p>
+                        </div>
+                        <div class="col-xs-6 col-md-2">
+                            <?php
+                                $this->form->get('id')->setValue($product->id); 
+
+                                $this->form->get('submit')->setValue(_('edit'));
+                                $this->form->setAttribute('action', $this->url('shopping-cart', array('action' => 'edit-shopping-cart-product', 'slug' => $product->slug)));
+                                echo $this->wrappedForm($this->form);
+
+                                $this->form->get('submit')->setValue(_('remove'));
+                                $this->form->setAttribute('action', $this->url('shopping-cart', array('action' => 'delete-shopping-cart-product', 'slug' => $product->slug)));
+                                echo $this->wrappedForm($this->form);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <?php if (is_object($this->list) && $this->list->count()) : ?>
+                <span><strong>Total Price:</strong> <?php echo $this->escapeHtml($totalPrice); ?> USD</span>
+                <a class="btn btn-primary pull-right" href="<?php echo $this->url('application', array('controller' => 'payment')); ?>">Pay Product</a>
+                <?php else :
+                    echo _('Products not find');
+                 endif; ?>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->partial('partial/sidebar.phtml'); ?>
+</div>

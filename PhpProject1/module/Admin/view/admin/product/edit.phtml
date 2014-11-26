@@ -1,0 +1,47 @@
+<div class="temlates">
+    <h1><?php echo $title; ?></h1>
+    <?php
+    if (isset($error) && !empty($error)) {
+        $this->headTitle('Error');
+        echo $error;
+        return;
+    }
+    $this->headScript()->appendFile($this->basePath() . '/js/simpleAjaxUploder/SimpleAjaxUploader.js', 'text/javascript');
+    $this->headScript()->appendFile($this->basePath() . '/js/simpleAjaxUploder/SimpleAjaxUploader.min.js', 'text/javascript');
+    ?>
+    <div class="invTabs">
+        <?php
+        $id = $this->form->get('id')->getValue();
+        $this->headTitle(htmlspecialchars($this->form->get('title')->getValue()));
+        echo $this->form()->openTag($form);
+        echo $this->wrappedElement($form->get('csrf'));
+        echo $this->wrappedElement($form->get('id'));
+        echo $this->wrappedElement($form->get('title'));
+        echo $this->wrappedElement($form->get('type'));
+        echo $this->wrappedElement($form->get('slug'));
+        echo $this->wrappedElement($form->get('price'));
+        echo $this->wrappedElement($form->get('currency'));
+        echo $this->wrappedElement($form->get('description'));
+        echo $this->wrappedUploadElement($form->get('attachments'));
+        echo $this->wrappedElement($form->get('submit'));
+        echo $this->wrappedElement($form->get('cancel'));
+        echo $this->form()->closeTag($form);
+        ?>
+    </div>
+    
+    <script>
+        $('.locfields').parent().parent().hide();
+    <?php if (isset($canClosePage) && $canClosePage) : ?>
+            parent.common.needClose++;
+     <?php endif; ?>
+                    parent.common.refreshGrid = 0;
+            delete parent.common.refreshDataLink;
+    <?php if (isset($wasAdded) && $wasAdded) : ?>
+                parent.common.changedForm = false;
+                parent.common.refreshGrid = 1;
+    <?php endif; ?>
+    <?php if ($id > 0) : ?>
+                parent.common.refreshDataLink = parent.getListLink + "&flid=" +<?php echo json_encode($id); ?>;
+    <?php endif; ?>
+    </script>
+</div>

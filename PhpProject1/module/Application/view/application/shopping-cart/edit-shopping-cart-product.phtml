@@ -1,0 +1,35 @@
+<?php
+$title = _('Edit Order');
+$this->headTitle($title);
+$totalPrice = 0;
+?>
+<div class="header-title ipadpages">
+    <div class="h-bg">	
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+
+    </div>
+</div>
+<div class="row row-offcanvas row-offcanvas-right">
+    <div class="col-xs-12 col-sm-9">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->escapeHtml($product->title); ?></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6 col-md-2">
+                        <img alt="<?php echo $this->escapeHtml($product->title); ?>" style="height: auto; width: 100%; display: block;" src="<?php echo $this->resizeImage($product->resource); ?>">
+                    </div>
+                    <div class="col-xs-6 col-md-10">
+                        <p><strong>Price:</strong> <?php echo $this->escapeHtml($product->price); ?><?php echo $this->escapeHtml($product->currency); ?></p>
+                        <p><strong>Type:</strong> <?php echo $this->escapeHtml($product->type); ?></p>
+                        <p><strong>Description:</strong> <?php echo $this->escapeHtml($product->description); ?></p>
+                        <?php
+                            echo $this->wrappedForm($this->form);
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->partial('partial/sidebar.phtml'); ?>
+</div>

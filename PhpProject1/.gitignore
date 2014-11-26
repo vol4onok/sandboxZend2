@@ -1,0 +1,12 @@
+.~lock.*
+.buildpath
+.DS_Store
+.idea
+.doc
+.project
+config/application.config.php
+composer.*
+vendor
+nbproject
+public/uploads
+.htaccess

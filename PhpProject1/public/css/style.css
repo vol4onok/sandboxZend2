@@ -1,0 +1,57 @@
+html, body {
+    height: 100%;
+}
+
+div.container a.brand {
+    margin-left: 0;
+    padding: 8px 20px 12px 40px;
+}
+.navbar-brand {
+	padding: 5px !important;
+	margin-right: 25px;
+}
+.nav > li > a {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+.nav > li {
+    padding-top: 8px;
+}
+.label {
+    color: #000;
+    font-size: 100%;
+    font-weight: normal;
+    text-align: left;
+    padding-left: 0px;
+}
+.navbar-brand img {
+	height: 40px;
+}
+.auth-form {
+	width: 350px;
+}
+
+#wrap {
+    height: auto !important;
+    min-height: 100%;
+}
+#footer {
+    height: 60px;
+    margin-top: -78px;
+}
+
+#wrap > .container {
+    padding-top: 60px;
+}
+.navbar {
+    min-height: 54px;
+}
+.form-login-block{
+   float: none; 
+   margin: 0 auto; 
+   display: inline-block
+}
+.gallery-product a {
+    float: left;
+    padding: 5px;
+}

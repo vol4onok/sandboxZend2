@@ -1,0 +1,46 @@
+<?php
+$this->headTitle(_('View Products'));
+?>
+<div class="row row-offcanvas row-offcanvas-right">
+    <div class="col-xs-12 col-sm-9">
+        <h2><?php echo $this->escapeHtml($this->product->title); ?></h2>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="row">
+                    <a class="gallery" href="<?php echo $this->resizeImage($product->resource, 500, 500); ?>"><img class="img-thumbnail" src="<?php echo $this->resizeImage($product->resource, 270, 250); ?>" /></a>
+                </div>
+                <?php if ($imageList) : ?>
+                <div class="row gallery-product">
+                    <?php foreach ($imageList as $image) : ?>
+                    <a class="gallery" rel="group" href="<?php echo $this->resizeImage($image, 500, 500); ?>"><img class="img-thumbnail" src="<?php echo $this->resizeImage($image, 50, 50); ?>" /></a>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-3">
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Type:</h4>
+                    <p><?php echo $this->product->type; ?></p>
+                </div>
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Price:</h4>
+                    <p><?php echo $this->product->price; ?> <?php echo $this->product->currency; ?></p>
+                </div>
+                <?php if (!empty($this->product->description)) : ?>
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Description:</h4>
+                    <p><?php echo $this->product->description; ?></p>
+                </div>            
+                <?php endif; ?>
+                <?php echo $this->wrappedForm($this->form); ?>
+            </div>            
+        </div>
+    </div>
+    <?php echo $this->partial('partial/sidebar.phtml'); ?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("a.gallery").fancybox();
+});
+</script>
